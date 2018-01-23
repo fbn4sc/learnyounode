@@ -1,10 +1,13 @@
 const fs = require("fs");
-const path = process.argv[2];
+const dir = process.argv[2];
+const ext = process.argv[3];
 
-fs.readFile(path, "utf8", (error, data) => {
+fs.readdir(dir, (error, files) => {
   if (error) throw error;
 
-  const lineCount = data.split("\n").length - 1;
+  const re = new RegExp(`\.${ext}$`);
 
-  console.log(lineCount);
+  files.map(file => {
+    if (file.match(re)) console.log(file);
+  });
 });
