@@ -1,4 +1,6 @@
-const numbers = process.argv.splice(2);
-const sum = numbers.reduce((a,b) => +a + +b);
+const fs = require("fs");
+const path = process.argv[2];
+const content = fs.readFileSync(path).toString();
+const lineCount = content.split("\n").length - 1;
 
-console.log(sum)
+console.log(lineCount);
