@@ -1,13 +1,8 @@
-const fs = require("fs");
 const dir = process.argv[2];
 const ext = process.argv[3];
+const ls = require("./ls");
 
-fs.readdir(dir, (error, files) => {
-  if (error) throw error;
-
-  const re = new RegExp(`\.${ext}$`);
-
-  files.map(file => {
-    if (file.match(re)) console.log(file);
-  });
+ls(dir, ext, (err, result) => {
+  if (err) console.log(err);
+  else result.map(file => console.log(file));
 });
