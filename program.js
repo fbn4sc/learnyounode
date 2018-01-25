@@ -1,8 +1,8 @@
-const dir = process.argv[2];
-const ext = process.argv[3];
-const ls = require("./ls");
+const http = require("http");
+const url = process.argv[2];
 
-ls(dir, ext, (err, result) => {
-  if (err) console.log(err);
-  else result.map(file => console.log(file));
+http.get(url, response => {
+  response.setEncoding("utf8");
+
+  response.on("data", data => console.log(data));
 });
