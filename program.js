@@ -1,25 +1,20 @@
-const http = require("http");
+const net = require("net");
+const port = process.argv[2];
 
-const fetchContent = url => {
-  return new Promise((resolve, reject) => {
-    http.get(url, response => {
-      let content = "";
+const padNumber = number => (number < 10 ? "0" + number : number);
 
-      response.setEncoding("utf8");
+const server = net.createServer(socket => {
+  let now = new Date();
 
-      response.on("data", data => (content += data));
+  const year = now.getFullYear();
+  const month = padNumber(now.getMonth() + 1);
+  const date = padNumber(now.getDate());
+  const hours = now.getHours();
+  const minutes = padNumber(now.getMinutes());
 
-      response.on("end", () => {
-        resolve(content);
-      });
-    });
-  });
-};
+  now = `${year}-${month}-${date} ${hours}:${minutes}\n`;
 
-const main = async () => {
-  for (i = 2; i <= 4; i++) {
-    console.log(await fetchContent(process.argv[i]));
-  }
-};
+  socket.end(now);
+});
 
-main();
+server.listen(port);
