@@ -1,15 +1,25 @@
 const http = require("http");
-const url = process.argv[2];
 
-http.get(url, response => {
-  let content = "";
+const fetchContent = url => {
+  return new Promise((resolve, reject) => {
+    http.get(url, response => {
+      let content = "";
 
-  response.setEncoding("utf8");
+      response.setEncoding("utf8");
 
-  response.on("data", data => (content += data));
+      response.on("data", data => (content += data));
 
-  response.on("end", () => {
-    console.log(content.length);
-    console.log(content);
+      response.on("end", () => {
+        resolve(content);
+      });
+    });
   });
-});
+};
+
+const main = async () => {
+  for (i = 2; i <= 4; i++) {
+    console.log(await fetchContent(process.argv[i]));
+  }
+};
+
+main();
