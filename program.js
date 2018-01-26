@@ -1,20 +1,11 @@
-const net = require("net");
-const port = process.argv[2];
+const http = require("http");
+const fs = require("fs");
 
-const padNumber = number => (number < 10 ? "0" + number : number);
-
-const server = net.createServer(socket => {
-  let now = new Date();
-
-  const year = now.getFullYear();
-  const month = padNumber(now.getMonth() + 1);
-  const date = padNumber(now.getDate());
-  const hours = now.getHours();
-  const minutes = padNumber(now.getMinutes());
-
-  now = `${year}-${month}-${date} ${hours}:${minutes}\n`;
-
-  socket.end(now);
+const server = http.createServer((req, res) => {
+  fs
+    .createReadStream(process.argv[3])
+    .on("data", data => res.write(data))
+    .on("end", () => res.end());
 });
 
-server.listen(port);
+server.listen(process.argv[2]);
