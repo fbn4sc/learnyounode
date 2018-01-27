@@ -1,16 +1,25 @@
 const http = require("http");
-const fs = require("fs");
+const url = require("url");
 
 const server = http.createServer((req, res) => {
-  let content = "";
-  if (req.method === "POST") {
-    req.on("data", data => {
-      content += data.toString();
-    });
+  res.writeHead(200, { "Content-Type": "application/json" });
 
-    req.on("end", () => {
-      res.end(content.toUpperCase());
-    });
+  const reqUrl = url.parse(req.url, true);
+
+  if (reqUrl.pathname === "/api/parsetime") {
+    const date = new Date(reqUrl.query.iso);
+
+    res.end(
+      JSON.stringify({
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+        second: date.getSeconds()
+      })
+    );
+  }
+
+  if (reqUrl.pathname === "/api/unixtime") {
+    res.end(JSON.stringify({ unixtime: Date.parse(reqUrl.query.iso) }));
   }
 });
 
